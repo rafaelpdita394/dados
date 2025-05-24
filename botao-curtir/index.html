@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Botão Curtir com localStorage</title>
+</head>
+<body>
+
+    <h1>Botão Curtir</h1>
+
+    <input type="text" id="nomeInput" placeholder="Digite seu nome">
+    <button id="curtirBtn">Curtir</button>
+    <button id="limparBtn">Limpar</button>
+
+    <p id="resultado">Ninguém curtiu</p>
+
+    <script>
+        // Recupera a lista do localStorage ou inicializa vazia
+        let nomes = JSON.parse(localStorage.getItem('curtidas')) || [];
+
+        // Atualiza a mensagem ao carregar a página
+        atualizarMensagem();
+
+        document.getElementById('curtirBtn').addEventListener('click', function() {
+            const nome = document.getElementById('nomeInput').value.trim();
+            if (nome && !nomes.includes(nome)) {
+                nomes.push(nome);
+                salvarNoLocalStorage();
+            }
+            document.getElementById('nomeInput').value = '';
+            atualizarMensagem();
+        });
+
+        document.getElementById('limparBtn').addEventListener('click', function() {
+            nomes = [];
+            localStorage.removeItem('curtidas');
+            atualizarMensagem();
+        });
+
+        function salvarNoLocalStorage() {
+            localStorage.setItem('curtidas', JSON.stringify(nomes));
+        }
+
+        function atualizarMensagem() {
+            const resultado = document.getElementById('resultado');
+            if (nomes.length === 0) {
+                resultado.innerText = "Ninguém curtiu";
+            } else if (nomes.length === 1) {
+                resultado.innerText = `${nomes[0]} curtiu`;
+            } else if (nomes.length === 2) {
+                resultado.innerText = `${nomes[0]} e ${nomes[1]} curtiram`;
+            } else {
+                resultado.innerText = `${nomes[0]}, ${nomes[1]} e mais ${nomes.length - 2} pessoas curtiram`;
+            }
+        }
+    </script>
+
+</body>
+</html>
